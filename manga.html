@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MangaPlus Basic Demo - Manga Detail</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+    h1 { text-align: center; }
+    a { text-decoration: none; color: #0077cc; }
+    a:hover { text-decoration: underline; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 8px 0; }
+    #description { font-style: italic; margin-bottom: 20px; }
+    .back { margin-top: 20px; display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <h1 id="title">Loading...</h1>
+  <p id="description"></p>
+
+  <h3>Chapters</h3>
+  <ul id="chapters"></ul>
+
+  <a href="index.html" class="back">← Back to Home</a>
+
+  <script>
+    // Sample manga data
+    const mangaData = {
+      onepiece: {
+        title: "One Piece",
+        description: "A story about pirates searching for the ultimate treasure.",
+        chapters: ["1", "2", "3"]
+      },
+      naruto: {
+        title: "Naruto",
+        description: "A young ninja's journey to become the strongest.",
+        chapters: ["1", "2", "3", "4"]
+      },
+      bleach: {
+        title: "Bleach",
+        description: "A teenager who becomes a Soul Reaper.",
+        chapters: ["1", "2"]
+      }
+    };
+
+    // Get manga key from URL query string
+    const params = new URLSearchParams(window.location.search);
+    const mangaKey = params.get("manga");
+
+    if (mangaKey && mangaData[mangaKey]) {
+      const manga = mangaData[mangaKey];
+      document.getElementById("title").textContent = manga.title;
+      document.getElementById("description").textContent = manga.description;
+
+      const chaptersList = document.getElementById("chapters");
+      manga.chapters.forEach(chap => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `reader.html?manga=${mangaKey}&chapter=${chap}`;
+        a.textContent = `Chapter ${chap}`;
+        li.appendChild(a);
+        chaptersList.appendChild(li);
+      });
+    } else {
+      document.getElementById("title").textContent = "Manga not found.";
+    }
+  </script>
+
+</body>
+</html>

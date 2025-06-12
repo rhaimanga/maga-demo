@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MangaPlus Basic Demo - Reader</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+    h1, h2 { text-align: center; }
+    img { width: 100%; margin-bottom: 10px; border: 1px solid #ccc; }
+    .nav-buttons { display: flex; justify-content: space-between; margin: 20px 0; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    a.back { display: block; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+  <a href="#" class="back" id="backLink">← Back to Manga</a>
+
+  <h1 id="mangaTitle">Loading...</h1>
+  <h2 id="chapterTitle"></h2>
+
+  <div id="pages"></div>
+
+  <div class="nav-buttons">
+    <button id="prevChapterBtn">Previous Chapter</button>
+    <button id="nextChapterBtn">Next Chapter</button>
+  </div>
+
+  <script>
+    // Manga data with pages per chapter (image URLs)
+    const mangaPages = {
+      onepiece: {
+        1: ['https://via.placeholder.com/700x900?text=One+Piece+Ch1+Page1', 'https://via.placeholder.com/700x900?text=One+Piece+Ch1+Page2', 'https://via.placeholder.com/700x900?text=One+Piece+Ch1+Page3'],
+        2: ['https://via.placeholder.com/700x900?text=One+Piece+Ch2+Page1', 'https://via.placeholder.com/700x900?text=One+Piece+Ch2+Page2'],
+        3: ['https://via.placeholder.com/700x900?text=One+Piece+Ch3+Page1']
+      },
+      naruto: {
+        1: ['https://via.placeholder.com/700x900?text=Naruto+Ch1+Page1', 'https://via.placeholder.com/700x900?text=Naruto+Ch1+Page2'],
+        2: ['https://via.placeholder.com/700x900?text=Naruto+Ch2+Page1'],
+        3: ['https://via.placeholder.com/700x900?text=Naruto+Ch3+Page1', 'https://via.placeholder.com/700x900?text=Naruto+Ch3+Page2'],
+        4: ['https://via.placeholder.com/700x900?text=Naruto+Ch4+Page1']
+      },
+      bleach: {
+        1: ['https://via.placeholder.com/700x900?text=Bleach+Ch1+Page1', 'https://via.placeholder.com/700x900?text=Bleach+Ch1+Page2'],
+        2: ['https://via.placeholder.com/700x900?text=Bleach+Ch2+Page1']
+      }
+    };
+
+    const mangaTitles = {
+      onepiece: "One Piece",
+      naruto: "Naruto",
+      bleach: "Bleach"
+    };
+
+    // Get manga & chapter from URL params
+    const params = new URLSearchParams(window.location.search);
+    const mangaKey = params.get('manga');
+    let chapterNum = parseInt(params.get('chapter'));
+
+    const pagesDiv = document.getElementById('pages');
+    const mangaTitleEl = document.getElementById('mangaTitle');
+    const chapterTitleEl = document.getElementById('chapterTitle');
+    const backLink = document.getElementById('backLink');
+
+    if (!mangaKey || !mangaPages[mangaKey] || !mangaPages[mangaKey][chapterNum]) {
+      pagesDiv.innerHTML = "<p>Manga or chapter not found.</p>";
+    } else {
+      mangaTitleEl.textContent = mangaTitles[mangaKey];
+      chapterTitleEl.textContent = `Chapter ${chapterNum}`;
+
+      // Show pages
+      mangaPages[mangaKey][chapterNum].forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        pagesDiv.appendChild(img);
+      });
+
+      // Back to manga detail page
+      backLink.href = `manga.html?manga=${mangaKey}`;
+    }
+
+    // Navigation buttons
+    document.getElementById('prevChapterBtn').onclick = () => {
+      const prev = chapterNum - 1;
+      if (mangaPages[mangaKey][prev]) {
+        window.location.href = `reader.html?manga=${mangaKey}&chapter=${prev}`;
+      } else {
+        alert('No previous chapter.');
+      }
+    };
+
+    document.getElementById('nextChapterBtn').onclick = () => {
+      const next = chapterNum + 1;
+      if (mangaPages[mangaKey][next]) {
+        window.location.href = `reader.html?manga=${mangaKey}&chapter=${next}`;
+      } else {
+        alert('No next chapter.');
+      }
+    };
+  </script>
+
+</body>
+</html>
